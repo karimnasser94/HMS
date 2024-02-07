@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+
+        <record id="hms_patient_view" model="ir.ui.view">
+            <field name="name">HMS Patient form view</field>
+            <field name="model">hms.patient</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="lastname"/>
+                            <field name="email"/>
+                            <field name="birthdate"/>
+                            <field name="history" attrs="{'invisible':[('age','&lt;',50)]}"/>
+                            <field name="blood_type"/>
+                            <field name="pcr"/>
+                            <field name="cr_ratio" attrs="{'required':[('pcr','=',True)]}"/>
+                            <field name="image"/>
+                            <field name="address"/>
+                            <field name="age"/>
+                            <field name="department_id" domain="[('is_opened','=',True)]"/>
+                            <field name="department_capacity"/>
+                            <field name="doctors_ids" widget="many2many_tags" attrs="{'readonly':[('department_id','=',False)]}"/>
+                            <field name="state"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+
+        <record id="hms_patient_action" model="ir.actions.act_window">
+            <field name="name">Patient</field>
+            <field name="res_model">hms.patient</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="hms_patient_root_action_menu"
+              name="HMS "
+              sequence="2"
+        />
+        <menuitem id="hms_patient_main_action_menu"
+                  name="Patient"
+                  action="hms_patient_action"
+                  parent="hms_patient_root_action_menu"
+                  sequence="1"
+        />
+    </data>
+</odoo>
