@@ -6,6 +6,12 @@
             <field name="model">hms.patient</field>
             <field name="arch" type="xml">
                 <form>
+                    <header>
+                        <button name="set_to_good" type="object" string="State Good" />
+                        <button name="set_to_fair" type="object" string="State Fair" />
+                        <button name="set_to_serious" type="object" string="State Serious" />
+                        <field name="state" widget="statusbar"/>
+                    </header>
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -15,15 +21,26 @@
                             <field name="history" attrs="{'invisible':[('age','&lt;',50)]}"/>
                             <field name="blood_type"/>
                             <field name="pcr"/>
-                            <field name="cr_ratio" attrs="{'required':[('pcr','=',True)]}"/>
+                            <field name="cr_ratio" attrs="{'required':[('pcr','!=',False)]}"/>
                             <field name="image"/>
                             <field name="address"/>
                             <field name="age"/>
                             <field name="department_id" domain="[('is_opened','=',True)]"/>
-                            <field name="department_capacity"/>
-                            <field name="doctors_ids" widget="many2many_tags" attrs="{'readonly':[('department_id','=',False)]}"/>
-                            <field name="state"/>
+                            <field name="capacity"/>
+                            <field name="doctors_ids" widget="many2many_tags"/>
+
                         </group>
+                        <notebook>
+                            <page string="History">
+                                <field name="history_ids">
+                                    <tree>
+                                        <field name="create_uid"/>
+                                        <field name="create_date"/>
+                                        <field name="description"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
