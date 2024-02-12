@@ -34,19 +34,29 @@ class HmsPatient(models.Model):
     ], default='undetermined')
     history_ids = fields.One2many('hms.history', 'patient_id')
 
+    def create_log(self):
+        pass
+
     def set_to_good(self):
         self.state = 'good'
         self.env['hms.history'].create({
-            'create_uid': self.id,
-            'create_date': self.create_date,
-            'description': 'state changed to ',
+            'patient_id': self.id,
+            'description': 'state changed to Good',
         })
 
     def set_to_fair(self):
         self.state = 'fair'
+        self.env['hms.history'].create({
+            'patient_id': self.id,
+            'description': 'state changed to Fair',
+        })
 
     def set_to_serious(self):
         self.state = 'serious'
+        self.env['hms.history'].create({
+            'patient_id': self.id,
+            'description': 'state changed to Serious',
+        })
 
     @api.onchange('age')
     def checked_pcr(self):
