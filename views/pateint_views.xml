@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
+                        <button name="set_to_undetermined" type="object" string="State Undetermined" />
                         <button name="set_to_good" type="object" string="State Good" />
                         <button name="set_to_fair" type="object" string="State Fair" />
                         <button name="set_to_serious" type="object" string="State Serious" />
