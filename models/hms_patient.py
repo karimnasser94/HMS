@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
+from datetime import datetime
 
 
 class HmsPatient(models.Model):
@@ -21,7 +22,7 @@ class HmsPatient(models.Model):
     pcr = fields.Boolean(string='PCR')
     image = fields.Image(string='Image')
     address = fields.Text(string='Address')
-    age = fields.Integer(string='Age')
+    age = fields.Integer(string='Age', compute='calc_age')
     department_id = fields.Many2one('hms.department')
     capacity = fields.Integer(related='department_id.capacity')
     doctors_ids = fields.Many2many('hms.doctors')
@@ -33,6 +34,18 @@ class HmsPatient(models.Model):
 
     ], default='undetermined')
     history_ids = fields.One2many('hms.history', 'patient_id')
+
+    _sql_constraints = [
+        ('unique_email', 'UNIQUE("email")', 'Email Already Exist')
+    ]
+
+    @api.depends('birthdate')
+    def calc_age(self):
+        for rec in self:
+            if rec.birthdate:
+                rec.age = datetime.now().year - rec.birthdate.year
+            else:
+                rec.age = 0
 
     def create_log(self, state):
         self.env['hms.history'].create({
@@ -68,6 +81,12 @@ class HmsPatient(models.Model):
                             'message': 'Pcr has been changed'
                         }
                     }
+
+    @api.constrains('email')
+    def check_email(self):
+        for rec in self:
+            if '@' not in rec.email:
+                raise ValidationError("PLease insert a Valid Email")
 
 
 class LogHistory(models.Model):
